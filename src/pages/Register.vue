@@ -81,7 +81,7 @@ async function onSubmit() {
 </script>
 
 <style scoped>
-/* 页面仍然撑满屏幕 */
+/* 页面仍然撑 满屏幕 */
 .register-page {
     width: 100%;
     padding: 40px 0;
