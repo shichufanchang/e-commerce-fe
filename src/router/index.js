@@ -1,25 +1,33 @@
 //创建路由器实例
 import { createRouter, createWebHistory } from "vue-router";
-import { useUserStore } from "../store/user";
-import WebHomePage from "@/components/WebHomePage.vue";
+
 
 //定义路由
 const routes = [
   {
     path: '/',
-    name: "WebHomePage",
-    component: () => import("@/components/WebHomePage.vue"),
+    component: () => import("@/components/homePage.vue"),
     children: [
       {
-        path: 'Login',
-        name: "Login",
-        component: () => import("@/pages/Login.vue"),
+        path:'',
+        name:"homePage",
+        component:()=>import("@/components/productList.vue")
       },
       {
-        path: 'Register',
-        name: "Register",
-        component: () => import("@/pages/Register.vue"),
+        path: 'login',
+        name: "Login",
+        component: () => import("@/pages/login.vue"),
       },
+      {
+        path: 'register',
+        name: "Register",
+        component: () => import("@/pages/register.vue"),
+      },
+      {
+        path:'cart',
+        name: 'Cart',
+        component:()=> import("@/pages/cart.vue")
+      }
     ],
   },
 ];

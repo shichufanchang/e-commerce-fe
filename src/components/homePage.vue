@@ -1,11 +1,15 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { useCartStore } from '@/store/shop/cart'
+
 const router = useRouter()
+const cartStore = useCartStore()
 
 
-const goLogin = () => router.push('/Login')
-const goRegister = () => router.push('/Register')
+const goLogin = () => router.push('/login')
+const goRegister = () => router.push('/register')
 const goHome = () => router.push('/')
+const goCart = () => router.push('/cart')
 
 </script>
 
@@ -43,7 +47,11 @@ const goHome = () => router.push('/')
 
         <div class="search-area">
           <input type="text" placeholder="搜索商品…" />
-          <div class="cart">搜索icon</div>
+
+          <div class="cart" @click="goCart">
+            <img src="/购物车.png" alt="">
+            <span v-if="cartStore.totalItems > 0" class="cart-count">{{ cartStore.totalItems }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -86,10 +94,50 @@ const goHome = () => router.push('/')
     </nav>
   </header>
   <main>
-    <!-- 内容区域且切换登录注册页面 -->
     <router-view />
   </main>
-  <footer></footer>
+  <footer>
+    <div class="footer-top-inner">
+      <div class="footer-column">
+        <h3>联系我们</h3>
+        <p>地址:<br>XXXXXXXXXXXXXXXXXXXXXX</p>
+        <p>邮箱地址:<br>info@yourdomain.com</p>
+        <p>联系方式:<br>+1 234-567-8901</p>
+      </div>
+      <div class="footer-column">
+        <h3>我的账户</h3>
+        <ul>
+          <li>我的账户</li>
+          <li>登录</li>
+          <li>我的购物车</li>
+          <li>My Compare</li>
+          <li>我的清单</li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>快速链接</h3>
+        <ul>
+          <li>隐私与cookie政策</li>
+          <li>搜索</li>
+          <li>联系我们</li>
+          <li>订单与退换货</li>
+          <li>高级搜索</li>
+        </ul>
+      </div>
+      <div class="footer-column newsletter-col">
+        <h3>新闻通讯</h3>
+        <p>XXXXXXXXXXXXXXXXXXXXXX</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="请输入您的电子邮箱">
+          <button>→</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>版权归XXXXX所有</p>
+      <div class="payment-icons">logo</div>
+    </div>
+  </footer>
 </template>
 
 <style scoped>
@@ -193,7 +241,6 @@ const goHome = () => router.push('/')
   height: 38px;
   padding: 0 15px;
   border: 1px solid #aaa;
-  border-right: none;
 }
 
 .search-area button {
@@ -210,8 +257,32 @@ const goHome = () => router.push('/')
 
 /* 购物车 */
 .cart {
+  position: relative;
+  padding: 0 5px;
   font-size: 22px;
   cursor: pointer;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #E40000;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.cart img {
+  width: 38px;
+  height: 38px;
 }
 
 /* #endregion  end */
@@ -220,7 +291,7 @@ const goHome = () => router.push('/')
 .main-nav {
   width: 100%;
   background: #000;
-  height: 56px;            
+  height: 56px;
 }
 
 .main-inner {
@@ -264,8 +335,11 @@ const goHome = () => router.push('/')
   min-width: 160px;
   background: #fff;
   padding: 10px 0;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   z-index: 999;
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
 }
 
 .menu-item:hover .dropdown {
@@ -275,6 +349,102 @@ const goHome = () => router.push('/')
 .dropdown li {
   padding: 10px 20px;
   white-space: nowrap;
+  color: #000;
 }
+
+.dropdown li:hover {
+  background-color: #f0f0f0;
+  color: #E40000;
+  cursor: pointer;
+}
+
+/* #endregion  */
+
+/* #region 底部 */
+footer {
+  background: #222;
+  color: #ccc;
+  padding-top: 50px;
+  font-size: 14px;
+}
+
+.footer-top-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #444;
+  gap: 30px;
+}
+
+.footer-column {
+  flex: 1;
+  max-width: 25%;
+}
+
+.footer-column h3 {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #444;
+  padding-bottom: 8px;
+}
+
+.footer-column p,
+.footer-column li {
+  line-height: 1.8;
+  margin: 0;
+  color: white;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-column li:before {
+  content: "›";
+  margin-right: 5px;
+  color: white;
+}
+
+.newsletter-form {
+  display: flex;
+  margin-top: 15px;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: white;
+  color: #333;
+}
+
+.newsletter-form button {
+  width: 40px;
+  background: #E40000;
+  color: white;
+  border: none;
+  padding: 0;
+  font-size: 20px;
+  border-radius: 0;
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-icons {
+  color: #aaa;
+}
+
 /* #endregion  */
 </style>

@@ -10,24 +10,13 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-
   if (token) {
     config.headers.Authorization = "Bearer " + token;
   }
-
   return config;
 });
 
 
-// 登录接口声明
-export function loginApi(data) {
-  return api.post("/auth/login", data);
-}
-
-// 注册接口声明
-export function registerApi(data) {
-  return api.post("/auth/register", data);
-}
 // /auth/login
 
 // // 请求拦截

@@ -5,10 +5,10 @@
             <div class="login-wrapper">
                 <div class="login-left">
                     <h2 class="section-title">注册账户</h2>
-                    <p>如果您有账户，请直接输入您的邮箱地址</p>
+                    <p>如果您有账户，请直接输入您的用户名称</p>
                     <form @submit.prevent="onSubmit" class="login-form">
-                        <label>邮箱</label>
-                        <input v-model="email" type="email" required />
+                        <label>用户名称</label>
+                        <input v-model="userName" type="text" required />
                         <label>密码</label>
                         <input v-model="password" type="password" required />
                         <button type="submit" class="btn-login">登录</button>
@@ -19,7 +19,9 @@
                     <h2 class="section-title">新账户</h2>
                     <p>创建账户有很多好处：快速结账，保存多个地址，追踪订单等等。</p>
                     <!-- 修改为router.push -->
-                    <router-link to="/Register" class="btn-create">确认创建</router-link>
+                    <!-- <router-link to="/Register" class="btn-create">确认创建</router-link> -->
+                    <!-- <div class="btn-create" @click="router.push('/register')">确认创建</div> -->
+                    <div class="btn-create" @click="router.push('/register')">确认创建</div>
                 </div>
             </div>
         </div>
@@ -30,32 +32,36 @@
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useUserStore } from "@/store/user";
-import { loginApi } from "@/api";
+import { loginApi } from "@/api/user";
 
 const userStore = useUserStore();
 const router = useRouter();
 
-const email = ref("");
+const userName = ref("");
 const password = ref("");
 const loading = ref(false);
 
 async function onSubmit() {
-    if (!email.value || !password.value) {
+    if (!userName.value || !password.value) {
         alert("邮箱和密码不能为空");
         return;
     }
     loading.value = true;
     try {
-        const res = await loginApi({
-            username: email.value,
-            password: password.value,
-        });
-        await userStore.login(email.value, password.value);
+        // const res = await loginApi({
+        //     username: userName.value,
+        //     password: password.value,
+        // });
+        await userStore.login(userName.value, password.value);
         alert("登录成功！");
         router.push("/");
     } catch (error) {
         console.error("登录异常：", error);
-        alert("登录失败，请检查账号或服务器问题");
+        if (error.response && error.response.data && error.response.data.message) {
+            alert("登录失败：" + error.response.data.message);
+        } else {
+            alert("登录失败，请检查账号或服务器问题");
+        }
     } finally {
         loading.value = false;
     }

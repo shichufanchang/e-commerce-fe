@@ -15,8 +15,8 @@
                         for="news">确认注册</label></div>
                 <h2 class="section-title">登录的个人信息</h2>
 
-                <label class="form-label">邮箱</label>
-                <input v-model="email" type="email" class="form-input" />
+                <label class="form-label">用户名</label>
+                <input v-model="username" type="text" class="form-input" />
 
                 <label class="form-label">密码</label>
                 <input v-model="password" type="password" class="form-input" />
@@ -32,9 +32,9 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { registerApi } from '../api';
+import { registerApi } from '@/api/user';
 
 const router = useRouter()
 
@@ -42,14 +42,14 @@ const router = useRouter()
 const firstName = ref("")
 const lastName = ref("")
 const newsletter = ref(false)
-const email = ref("")
+const username = ref("")
 const password = ref("")
 const confirmPassword = ref("")
 
 //提交校验
 async function onSubmit() {
     // 1. 必填校验
-    if (!firstName.value || !lastName.value || !email.value || !password.value) {
+    if (!firstName.value || !lastName.value || !username.value || !password.value) {
         alert("请完整填写所有必填字段");
         return;
     }
@@ -64,17 +64,21 @@ async function onSubmit() {
         await registerApi({
             firstName: firstName.value,
             lastName: lastName.value,
-            email: email.value,
+            username: username.value,
             password: password.value,
             newsletter: newsletter.value,
         });
 
         alert("注册成功！请登录");
-        router.push("/Login");
+        router.push("/login");
 
     } catch (error) {
         console.error("注册失败：", error);
-        alert("注册失败，请检查服务器或网络");
+        if (error.response && error.response.data && error.response.data.message) {
+            alert("注册失败：" + error.response.data.message);
+        } else {
+            alert("注册失败，请检查服务器或网络");
+        }
     }
 }
 
